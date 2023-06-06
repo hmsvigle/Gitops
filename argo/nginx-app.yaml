@@ -1,0 +1,115 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx
+  namespace: argocd
+spec:
+  destination:
+    namespace: app
+    server: https://kubernetes.default.svc
+  project: default
+  revisionHistoryLimit: 20
+  source:
+    path: app/
+    repoURL: https://github.com/hmsvigle/Gitops.git
+    targetRevision: feature-argocd-case01
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+status:
+  conditions:
+  - lastTransitionTime: "2023-04-14T08:43:54Z"
+    message: 'Failed sync attempt to 5a654a643744487358aa4489801c97db082e6385: one
+      or more objects failed to apply, reason: error when replacing "/dev/shm/2762165192":
+      Operation cannot be fulfilled on services "nginx-svc": the object has been modified;
+      please apply your changes to the latest version and try again'
+    type: SyncError
+  health:
+    status: Healthy
+  history:
+  - deployStartedAt: "2023-04-14T08:37:37Z"
+    deployedAt: "2023-04-14T08:37:38Z"
+    id: 0
+    revision: 5a654a643744487358aa4489801c97db082e6385
+    source:
+      path: app/
+      repoURL: https://github.com/hmsvigle/Gitops.git
+      targetRevision: feature-argocd-case01
+  operationState:
+    finishedAt: "2023-04-14T08:43:54Z"
+    message: 'one or more objects failed to apply, reason: error when replacing "/dev/shm/2762165192":
+      Operation cannot be fulfilled on services "nginx-svc": the object has been modified;
+      please apply your changes to the latest version and try again'
+    operation:
+      initiatedBy:
+        username: admin
+      retry: {}
+      sync:
+        revision: 5a654a643744487358aa4489801c97db082e6385
+        syncOptions:
+        - Replace=true
+        syncStrategy:
+          hook: {}
+    phase: Failed
+    startedAt: "2023-04-14T08:43:54Z"
+    syncResult:
+      resources:
+      - group: ""
+        hookPhase: Failed
+        kind: Service
+        message: 'error when replacing "/dev/shm/2762165192": Operation cannot be
+          fulfilled on services "nginx-svc": the object has been modified; please
+          apply your changes to the latest version and try again'
+        name: nginx-svc
+        namespace: app
+        status: SyncFailed
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        kind: Deployment
+        message: deployment.apps/nginx replaced
+        name: nginx
+        namespace: app
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      revision: 5a654a643744487358aa4489801c97db082e6385
+      source:
+        path: app/
+        repoURL: https://github.com/hmsvigle/Gitops.git
+        targetRevision: feature-argocd-case01
+  reconciledAt: "2023-04-14T11:33:28Z"
+  resources:
+  - health:
+      status: Healthy
+    kind: Service
+    name: nginx-svc
+    namespace: app
+    status: OutOfSync
+    version: v1
+  - group: apps
+    health:
+      status: Healthy
+    kind: Deployment
+    name: nginx
+    namespace: app
+    status: Synced
+    version: v1
+  sourceType: Directory
+  summary:
+    images:
+    - dockerhub.com/nginx-unprivileged/nginx-unprivileged:v1
+  sync:
+    comparedTo:
+      destination:
+        namespace: app
+        server: https://kubernetes.default.svc
+      source:
+        path: app/
+        repoURL: https://github.com/hmsvigle/Gitops.git
+        targetRevision: feature-argocd-case01
+    status: OutOfSync
